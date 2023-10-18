@@ -19,46 +19,41 @@ public class Schmovement : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-        if (IsTouchingGroundCheck())
-        {
-            Jump();
-        }
+    { 
+        Jump();
         Move();
     }
 
     private void Jump()
     {
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             _rb.velocity *= new Vector2(1, jumpHeight);
         }
-    }
+    }   
 
     private bool IsTouchingGroundCheck()
     {
-        return (_bc.IsTouching(Grid.FindAnyObjectByType<Tilemap>().GetComponent<TilemapCollider2D>()));
+        return (_bc.IsTouching(FindAnyObjectByType<Tilemap>().GetComponent<TilemapCollider2D>()));
     }
 
     private void Move()
-    { 
+    {
+        float dirX = Input.GetAxisRaw("Horizontal");
         if (Input.GetKey(KeyCode.RightArrow)) 
         {
-            Vector2 vMove = new Vector2(moveSpeed, 1);
             if (GetComponent<SpriteRenderer>().flipX)
             {
                 GetComponent<SpriteRenderer>().flipX = false;
             }
-            transform.Translate(vMove * Time.deltaTime);
         }
         else if (Input.GetKey(KeyCode.LeftArrow))
         {
-            Vector2 vMove = new Vector2((1-moveSpeed), 1);
             if (GetComponent<SpriteRenderer>().flipX == false)
             {
                 GetComponent<SpriteRenderer>().flipX = true;
             }
-            transform.Translate(vMove * Time.deltaTime);
         }
+        _rb.velocity = new Vector2(dirX * moveSpeed, _rb.velocity.y);
     }
 }
