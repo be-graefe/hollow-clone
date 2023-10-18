@@ -3,12 +3,12 @@ using UnityEngine;
 public class PhysicsTweaks : MonoBehaviour
 {
     Rigidbody2D _rb;
-    public float maxFallSpeed = 30f;
+    public float maxFallSpeed = 15f;
 
     // Start is called before the first frame update
     void Start()
     {
-       _rb = GetComponent<Rigidbody2D>(); 
+        _rb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
