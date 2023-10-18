@@ -1,13 +1,10 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class Schmovement : MonoBehaviour
 {
-    Rigidbody2D rb;
-    BoxCollider2D bc;
+    Rigidbody2D _rb;
+    BoxCollider2D _bc;
     [Range(1f, 10f)]
     public float jumpHeight;
     [Range(1f, 10f)]
@@ -16,48 +13,39 @@ public class Schmovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-        bc = GetComponent<BoxCollider2D>();
+        _rb = GetComponent<Rigidbody2D>();
+        _bc = GetComponent<BoxCollider2D>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (isTouchingGroundCheck())
+        if (IsTouchingGroundCheck())
         {
-            jump();
+            Jump();
         }
-        move();
+        Move();
     }
 
-    private void FixedUpdate()
-    {
-        
-    }
-
-    private void jump()
+    private void Jump()
     {
         if (Input.GetButtonDown("Jump"))
         {
-            rb.velocity *= new Vector2(1, jumpHeight);
+            _rb.velocity *= new Vector2(1, jumpHeight);
         }
     }
 
-    private Boolean isTouchingGroundCheck()
+    private bool IsTouchingGroundCheck()
     {
-        if (bc.IsTouching(Grid.FindAnyObjectByType<Tilemap>().GetComponent<TilemapCollider2D>()))
-        {
-            return true;
-        }
-        return false;
+        return (_bc.IsTouching(Grid.FindAnyObjectByType<Tilemap>().GetComponent<TilemapCollider2D>()));
     }
 
-    private void move()
+    private void Move()
     { 
         if (Input.GetKey(KeyCode.RightArrow)) 
         {
             Vector2 vMove = new Vector2(moveSpeed, 1);
-            if (GetComponent<SpriteRenderer>().flipX == true)
+            if (GetComponent<SpriteRenderer>().flipX)
             {
                 GetComponent<SpriteRenderer>().flipX = false;
             }

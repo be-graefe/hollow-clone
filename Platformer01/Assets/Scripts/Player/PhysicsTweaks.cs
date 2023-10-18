@@ -1,24 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PhysicsTweaks : MonoBehaviour
 {
-    Rigidbody2D rb;
+    Rigidbody2D _rb;
     public float maxFallSpeed = 30f;
 
     // Start is called before the first frame update
     void Start()
     {
-       rb = GetComponent<Rigidbody2D>(); 
+       _rb = GetComponent<Rigidbody2D>(); 
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (rb.velocity.y < (1-maxFallSpeed))
+        if (_rb.velocity.y < (1-maxFallSpeed))
         {
-            rb.velocity = rb.velocity.normalized * maxFallSpeed;
+            _rb.velocity = _rb.velocity.normalized * maxFallSpeed;
         }
     }
 }
