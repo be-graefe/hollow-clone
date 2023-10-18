@@ -1,0 +1,10 @@
+#ignore all config files
+Platformer01/UserSettings
+Platformer01/ProjectSettings
+Platformer01/Logs
+Platformer01/Library
+Platformer01/obj
+Platformer01/.vs
+Platformer01/.vsconfig
+Platformer01/Assembly-CSharp.csproj
+Platformer01/Temp
