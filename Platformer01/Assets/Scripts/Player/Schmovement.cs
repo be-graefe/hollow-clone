@@ -7,7 +7,9 @@ public class Schmovement : MonoBehaviour
     private SpriteRenderer _sr;
     private Animator _anim;
     
-    [SerializeField] private LayerMask jumpableGround;
+    [SerializeField]
+    [Tooltip("The LayerMask which is jumpable")]
+    private LayerMask jumpableGround;
     
     [Range(1f, 10f)]
     public float jumpHeight;
@@ -38,13 +40,6 @@ public class Schmovement : MonoBehaviour
     private void Move()
     {
         _rb.velocity = new Vector2(_dirX * moveSpeed, _rb.velocity.y);
-        if (_dirX < 0)
-        {
-            _sr.flipX = true;
-        } else if (_dirX > 0)
-        {
-            _sr.flipX = false;
-        }
     }
 
     private void AnimationUpdate()
@@ -52,10 +47,12 @@ public class Schmovement : MonoBehaviour
         if (_dirX > 0f)
         {
             _anim.SetBool(Running, true);
+            _sr.flipX = false;
         }
         else if (_dirX < 0f)
         {
             _anim.SetBool(Running, true);
+            _sr.flipX = true;
         }
         else
         {
