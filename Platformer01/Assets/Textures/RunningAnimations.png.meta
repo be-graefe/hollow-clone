@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 1352d179e30e28048812d170db6cf109
+guid: 1de53d43c409e2b499247f5672a50195
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 32
+  spritePixelsToUnits: 64
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -123,13 +123,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: RinnungAnimation_0
+      name: RunningAnimations_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 32
-        height: 32
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -137,20 +137,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8e8103b431b638649b4335c5e22e604c
-      internalID: 1830323136
+      spriteID: c8d78ff569604bc43b5e27afccd0232a
+      internalID: -2118768463
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RinnungAnimation_1
+      name: RunningAnimations_1
       rect:
         serializedVersion: 2
-        x: 32
+        x: 64
         y: 0
-        width: 32
-        height: 32
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -158,8 +158,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a2ef78c38edf89b4a88c713526b393ef
-      internalID: 1232234058
+      spriteID: db93c4583ec4f9046bedfa3b0f022a29
+      internalID: 1321052612
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RunningAnimations_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 295f77430bcf3b741a47fe3991c7602e
+      internalID: -1451975026
       vertices: []
       indices: 
       edges: []
@@ -175,8 +196,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      RinnungAnimation_0: 1830323136
-      RinnungAnimation_1: 1232234058
+      RunningAnimations_0: -2118768463
+      RunningAnimations_1: 1321052612
+      RunningAnimations_2: -1451975026
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
