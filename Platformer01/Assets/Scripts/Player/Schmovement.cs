@@ -16,7 +16,12 @@ public class Schmovement : MonoBehaviour
     [Range(1f, 10f)]
     public float moveSpeed;
 
+    public float fastFallSpeed = -20f;
+
     private static readonly int Running = Animator.StringToHash("running");
+    private static readonly int Jumping = Animator.StringToHash("jumping");
+    private static readonly int Falling = Animator.StringToHash("falling");
+    private static readonly int FastFall = Animator.StringToHash("fastFall");
     private float _dirX;
 
     // Start is called before the first frame update
@@ -31,10 +36,17 @@ public class Schmovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (IsGrounded())
+        {
+            if (_rb.velocity.y < 0f)
+            {
+                _rb.velocity = new Vector2(_rb.velocity.x, 0f);
+            }
+        }
         _dirX = Input.GetAxisRaw("Horizontal");
         Move();
-        AnimationUpdate();
         Jump();
+        AnimationUpdate();
     }
 
     private void Move()
@@ -58,14 +70,15 @@ public class Schmovement : MonoBehaviour
         {
             _anim.SetBool(Running, false);
         }
+        _anim.SetBool(Jumping, (_rb.velocity.y > 0f) && (!IsGrounded()));
+        _anim.SetBool(Falling, (_rb.velocity.y < 0f) && (!IsGrounded()));
+        _anim.SetBool(FastFall, (_rb.velocity.y < fastFallSpeed) && (!IsGrounded()));
     }
 
     private void Jump()
     {
-        if (Input.GetButtonDown("Jump") && IsGrounded())
-        {
-            _rb.velocity = new Vector2(_rb.velocity.x, jumpHeight);
-        }
+        if (!Input.GetButtonDown("Jump") || !IsGrounded()) return;
+        _rb.velocity = new Vector2(_rb.velocity.x, jumpHeight);
     }
 
     private bool IsGrounded()

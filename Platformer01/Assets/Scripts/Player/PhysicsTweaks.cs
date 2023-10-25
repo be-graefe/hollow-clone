@@ -14,7 +14,7 @@ public class PhysicsTweaks : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_rb.velocity.y < (1-maxFallSpeed))
+        if (_rb.velocity.y < (0-maxFallSpeed))
         {
             _rb.velocity = _rb.velocity.normalized * maxFallSpeed;
         }
