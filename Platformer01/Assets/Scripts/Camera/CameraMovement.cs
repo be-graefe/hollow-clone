@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
@@ -6,11 +5,6 @@ public class CameraMovement : MonoBehaviour
     public Transform target;
     public float schmoveSpeed = 12.5f;
     public Vector3 offset;
-
-    private void Start()
-    {
-        
-    }
 
     private void FixedUpdate()
     {
