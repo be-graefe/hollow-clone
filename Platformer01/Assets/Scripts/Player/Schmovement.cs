@@ -10,19 +10,24 @@ public class Schmovement : MonoBehaviour
     [SerializeField]
     [Tooltip("The LayerMask which is jumpable")]
     private LayerMask jumpableGround;
+    [SerializeField] private LayerMask enemyLayer;
+    [SerializeField] private Transform attackPointRight;
+    [SerializeField] private Transform attackPointLeft;
     
     [Range(1f, 10f)]
     public float jumpHeight;
     [Range(1f, 10f)]
     public float moveSpeed;
-
     public float fastFallSpeed = -20f;
-
+    public float attackRadius = 1f;
+    
     private static readonly int Running = Animator.StringToHash("running");
     private static readonly int Jumping = Animator.StringToHash("jumping");
     private static readonly int Falling = Animator.StringToHash("falling");
     private static readonly int FastFall = Animator.StringToHash("fastFall");
+    private static readonly int Attacking = Animator.StringToHash("attacking");
     private float _dirX;
+    private readonly Collider2D[] _results = new Collider2D[10];
 
     // Start is called before the first frame update
     void Start()
@@ -43,6 +48,10 @@ public class Schmovement : MonoBehaviour
                 _rb.velocity = new Vector2(_rb.velocity.x, 0f);
             }
         }
+        if (Input.GetKeyDown(KeyCode.T) && !_anim.GetBool(Attacking))
+        {
+            _anim.SetBool(Attacking, true);
+        }
         _dirX = Input.GetAxisRaw("Horizontal");
         Move();
         Jump();
@@ -58,12 +67,18 @@ public class Schmovement : MonoBehaviour
     {
         if (_dirX > 0f)
         {
-            _anim.SetBool(Running, true);
+            if (IsGrounded())
+            {
+                _anim.SetBool(Running, true);
+            }
             _sr.flipX = false;
         }
         else if (_dirX < 0f)
         {
-            _anim.SetBool(Running, true);
+            if (IsGrounded())
+            {
+                _anim.SetBool(Running, true);
+            }
             _sr.flipX = true;
         }
         else
@@ -85,5 +100,26 @@ public class Schmovement : MonoBehaviour
     {
         var bounds = _bc.bounds;
         return Physics2D.BoxCast(bounds.center, bounds.size, 0f, Vector2.down, .1f, jumpableGround);
+    }
+
+    public void AttackSide()
+    {
+        var temp = Physics2D.OverlapCircleNonAlloc(_sr.flipX ? attackPointLeft.position : attackPointRight.position, attackRadius, _results, enemyLayer);
+        for (int i = 0; i < temp; i++)
+        {
+            Debug.Log("Hit " + _results[i].name);
+        }
+    }
+    
+    public void EndAttack()
+    {
+        _anim.SetBool(Attacking, false);
+    }
+    
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(attackPointRight.position, attackRadius);
+        Gizmos.DrawWireSphere(attackPointLeft.position, attackRadius);
     }
 }
