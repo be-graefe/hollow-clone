@@ -20,18 +20,24 @@ public class Schmovement : MonoBehaviour
     public float moveSpeed;
     public float fastFallSpeed = -20f;
     public float attackRadius = 1f;
-    
-    private static readonly int Running = Animator.StringToHash("running");
-    private static readonly int Jumping = Animator.StringToHash("jumping");
-    private static readonly int Falling = Animator.StringToHash("falling");
-    private static readonly int FastFall = Animator.StringToHash("fastFall");
-    private static readonly int Attacking = Animator.StringToHash("attacking");
-    private float _dirX;
+
     private readonly Collider2D[] _results = new Collider2D[10];
+    const string PlayerIdle = "Player_Idle";
+    const string PlayerRun = "Player_Running";
+    const string PlayerJump = "Player_Jump";
+    const string PlayerFall = "Player_Falling";
+    const string PlayerFastFall = "Player_FastFalling";
+    const string PlayerSideAttack = "Player_SideAttack";
+    private bool _isAttackPressed;
+    private float _dirX;
+    private string _currentState;
+    private static readonly int Attacking = Animator.StringToHash("attacking");
+
 
     // Start is called before the first frame update
     void Start()
     {
+        _currentState = PlayerIdle;
         _rb = GetComponent<Rigidbody2D>();
         _bc = GetComponent<BoxCollider2D>();
         _sr = GetComponent<SpriteRenderer>();
@@ -41,6 +47,21 @@ public class Schmovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        _dirX = Input.GetAxisRaw("Horizontal");
+        _isAttackPressed = Input.GetKeyDown(KeyCode.E);
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Jump();
+        }
+        if (_isAttackPressed)
+        {
+            SideAttack();
+        }
+        StateUpdate();
+    }
+
+    private void FixedUpdate()
+    {
         if (IsGrounded())
         {
             if (_rb.velocity.y < 0f)
@@ -48,14 +69,7 @@ public class Schmovement : MonoBehaviour
                 _rb.velocity = new Vector2(_rb.velocity.x, 0f);
             }
         }
-        if (Input.GetKeyDown(KeyCode.T) && !_anim.GetBool(Attacking))
-        {
-            _anim.SetBool(Attacking, true);
-        }
-        _dirX = Input.GetAxisRaw("Horizontal");
         Move();
-        Jump();
-        AnimationUpdate();
     }
 
     private void Move()
@@ -63,13 +77,14 @@ public class Schmovement : MonoBehaviour
         _rb.velocity = new Vector2(_dirX * moveSpeed, _rb.velocity.y);
     }
 
-    private void AnimationUpdate()
+    private void StateUpdate()
     {
+        if(_anim.GetBool(Attacking)) return;
         if (_dirX > 0f)
         {
             if (IsGrounded())
             {
-                _anim.SetBool(Running, true);
+                AnimationUpdate(PlayerRun);
             }
             _sr.flipX = false;
         }
@@ -77,22 +92,50 @@ public class Schmovement : MonoBehaviour
         {
             if (IsGrounded())
             {
-                _anim.SetBool(Running, true);
+                AnimationUpdate(PlayerRun);
             }
             _sr.flipX = true;
         }
         else
         {
-            _anim.SetBool(Running, false);
+            if (IsGrounded())
+            {
+                AnimationUpdate(PlayerIdle);
+            }
         }
-        _anim.SetBool(Jumping, (_rb.velocity.y > 0f) && (!IsGrounded()));
-        _anim.SetBool(Falling, (_rb.velocity.y < 0f) && (!IsGrounded()));
-        _anim.SetBool(FastFall, (_rb.velocity.y < fastFallSpeed) && (!IsGrounded()));
+        if ((_rb.velocity.y > 0f) && (!IsGrounded()))
+        {
+            AnimationUpdate(PlayerJump);
+        }
+        else if ((_rb.velocity.y < 0f) && (!IsGrounded()))
+        {
+            AnimationUpdate(PlayerFall);
+        }
+        else if ((_rb.velocity.y < fastFallSpeed) && (!IsGrounded()))
+        {
+            AnimationUpdate(PlayerFastFall);
+        }
+        if (!_isAttackPressed) return;
+        AnimationUpdate(PlayerSideAttack);
+        _anim.SetBool(Attacking, true);
+    }
+    
+    private void AnimationUpdate(string newState)
+    {
+        if (_currentState == newState) return;
+        _anim.Play(newState);
+        _currentState = newState;
+    }
+    
+    public void EndAttack()
+    {
+        _anim.SetBool(Attacking, false);
+        StateUpdate();
     }
 
     private void Jump()
     {
-        if (!Input.GetButtonDown("Jump") || !IsGrounded()) return;
+        if (!IsGrounded()) return;
         _rb.velocity = new Vector2(_rb.velocity.x, jumpHeight);
     }
 
@@ -102,18 +145,13 @@ public class Schmovement : MonoBehaviour
         return Physics2D.BoxCast(bounds.center, bounds.size, 0f, Vector2.down, .1f, jumpableGround);
     }
 
-    public void AttackSide()
+    private void SideAttack()
     {
         var temp = Physics2D.OverlapCircleNonAlloc(_sr.flipX ? attackPointLeft.position : attackPointRight.position, attackRadius, _results, enemyLayer);
         for (int i = 0; i < temp; i++)
         {
             Debug.Log("Hit " + _results[i].name);
         }
-    }
-    
-    public void EndAttack()
-    {
-        _anim.SetBool(Attacking, false);
     }
     
     private void OnDrawGizmos()
